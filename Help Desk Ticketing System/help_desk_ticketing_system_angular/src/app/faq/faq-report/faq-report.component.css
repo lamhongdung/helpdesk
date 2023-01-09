@@ -1,0 +1,11 @@
+.question {
+    padding: 20px;
+    font-size: 15px;
+    background: #ebebeb;
+    font-weight: bold;
+}
+.answer {
+    padding: 20px;
+    font-size: 14px;
+    border-bottom: 2px solid #CCC;
+}

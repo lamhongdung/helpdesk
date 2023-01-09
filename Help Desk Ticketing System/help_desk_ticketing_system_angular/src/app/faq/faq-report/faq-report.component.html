@@ -1,0 +1,30 @@
+<app-frontend-header></app-frontend-header>
+
+
+<!-- Start Sample Area -->
+<!-- service_area  -->
+<div class="service_area">
+  <div class="container">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12">
+          <!-- Advanced Tables -->
+          <div class="card">
+            <p class="frontend_h1">All FAQ</p>
+            <div class="card-content">
+              <div class="table-responsive">
+                  <div  *ngFor="let faq of faq | async">
+                        <div class="question"><b>Questions : </b>{{faq.faq_question}}</div>
+                        <div class="answer"><b>Answer : </b>{{faq.faq_answer}}</div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--/ service_area  -->
+<!-- End Sample Area -->
+<app-frontend-footer></app-frontend-footer>
