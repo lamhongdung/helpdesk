@@ -1,0 +1,9 @@
+/**
+ * 
+ */
+/**
+ * @author dunglh
+ *
+ */
+module streammap {
+}

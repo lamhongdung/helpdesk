@@ -19,8 +19,8 @@ public class ProjectSecurityConfig {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-//        http.csrf().disable()
-                        http.authorizeHttpRequests()
+        http.csrf().disable()
+                .authorizeHttpRequests()
                         .requestMatchers("/myAccount","/myBalance","/myLoans","/myCards").authenticated()
                         .requestMatchers("/notices","/contact","/register").permitAll()
                 .and().formLogin()
@@ -44,20 +44,20 @@ public class ProjectSecurityConfig {
      * fdfdfdd
      * @return
      */
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-/*        Approach 1 where we use withDefaultPasswordEncoder() method
-		while creating the user details*/
-        UserDetails admin = User.withUsername("admin")
-                .password("12345")
-                .authorities("admin")
-                .build();
-        UserDetails user = User
-                .withUsername("user")
-                .password("12345")
-                .authorities("read")
-                .build();
-        return new InMemoryUserDetailsManager(admin, user);
+//    @Bean
+//    public InMemoryUserDetailsManager userDetailsService() {
+///*        Approach 1 where we use withDefaultPasswordEncoder() method
+//		while creating the user details*/
+//        UserDetails admin = User.withUsername("admin")
+//                .password("12345")
+//                .authorities("admin")
+//                .build();
+//        UserDetails user = User
+//                .withUsername("user")
+//                .password("12345")
+//                .authorities("read")
+//                .build();
+//        return new InMemoryUserDetailsManager(admin, user);
 
 //         Approach 2 where we use NoOpPasswordEncoder Bean
 //		while creating the user details
@@ -71,11 +71,11 @@ public class ProjectSecurityConfig {
 //                .build();
 //        return new InMemoryUserDetailsManager(admin, user);
 
-    }
+//    }
 
-    /*@Bean
-    public UserDetailsService userDetailsService(DataSource dataSource) {
-        return new JdbcUserDetailsManager(dataSource);
-    }*/
+//    @Bean
+//    public UserDetailsService userDetailsService(DataSource dataSource) {
+//        return new JdbcUserDetailsManager(dataSource);
+//    }
 
 }

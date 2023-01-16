@@ -38,13 +38,14 @@ public class JWTTokenProvider {
         return JWT.create()
                 .withIssuer(HELP_DESK)
                 .withAudience(HELP_DESK_ADMINISTRATION)
-                .withIssuedAt(new Date())
+                .withIssuedAt(new Date()) // now
                 .withSubject(userPrincipal.getUsername()) // unique
                 .withArrayClaim(AUTHORITIES,claims)
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(HMAC512(secret.getBytes()));
     }
 
+    // read, write
     public List<GrantedAuthority> getAuthorities(String token){
         String[] claims = getClaimsFromToken(token);
         return stream(claims).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
@@ -59,7 +60,7 @@ public class JWTTokenProvider {
 
     public boolean isTokenValid(String username, String token){
         JWTVerifier verifier = getJWTVerifier();
-        return StringUtils.isNotEmpty(username) && isTokenExpired(verifier, token);
+        return StringUtils.isNotEmpty(username) && !isTokenExpired(verifier, token);
     }
 
     private boolean isTokenExpired(JWTVerifier verifier, String token) {

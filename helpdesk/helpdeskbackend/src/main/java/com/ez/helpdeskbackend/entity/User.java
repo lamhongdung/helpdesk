@@ -19,7 +19,7 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
     private Long id;
-    private String email;
+    private String email; // username
     private String firstName;
     private  String lastName;
     private  String password;
