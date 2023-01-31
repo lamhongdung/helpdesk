@@ -1,0 +1,15 @@
+<div>
+    <label>Enter Length</label>
+    <input (input)="onChangeLength($any($event.target).value)"/>
+  </div>
+
+
+<dual-list key = "key" [source]="source" display="station" 
+
+[(destination)]="confirmed" height="350px" [filter]=filter
+[sort] = "keepSorted"
+(destinationChange) = "onDestinationChange()"
+>
+
+
+</dual-list>
