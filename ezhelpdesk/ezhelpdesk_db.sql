@@ -1,10 +1,33 @@
-create database eazybank;
+--------------
+-- database --
+--------------
+DROP DATABASE IF EXISTS ezhelpdesk;
 
-use eazybank;
+create database ezhelpdesk;
 
-drop table `users`;
-drop table `authorities`;
-drop table `customer`;
+use ezhelpdesk;
+
+-- -----------------------------------------------------
+-- Table `category`
+-- -----------------------------------------------------
+
+drop table if exists `category`;
+
+CREATE TABLE `category` (
+  `categoryId` int NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) not NULL,
+  `status` VARCHAR(255) not NULL,
+  PRIMARY KEY (`categoryId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `category`(name, status) VALUES ('Phần cứng máy tính', 'Active');
+INSERT INTO `category`(name, status) VALUES ('Phần mềm máy tính', 'Active');
+
+--
+-- -- ezbank
+--
+
+drop table if exists `customer`;
 
 CREATE TABLE `customer` (
   `customer_id` int NOT NULL AUTO_INCREMENT,
@@ -20,9 +43,11 @@ CREATE TABLE `customer` (
 INSERT INTO `customer` (`name`,`email`,`mobile_number`, `pwd`, `role`,`create_dt`)
  VALUES ('Happy','happy@example.com','9876548337', '$2y$12$oRRbkNfwuR8ug4MlzH5FOeui.//1mkd.RsOAJMbykTSupVy.x/vb2', 'admin',CURDATE());
 
+drop table if exists `accounts`;
+
 CREATE TABLE `accounts` (
   `customer_id` int NOT NULL,
-   `account_number` int NOT NULL,
+   `account_number` bigint NOT NULL,
   `account_type` varchar(100) NOT NULL,
   `branch_address` varchar(200) NOT NULL,
   `create_dt` date DEFAULT NULL,
@@ -34,11 +59,13 @@ CREATE TABLE `accounts` (
 INSERT INTO `accounts` (`customer_id`, `account_number`, `account_type`, `branch_address`, `create_dt`)
  VALUES (1, 186576453434, 'Savings', '123 Main Street, New York', CURDATE());
 
+drop table if exists `account_transactions`;
+
 CREATE TABLE `account_transactions` (
   `transaction_id` varchar(200) NOT NULL,
-  `account_number` int NOT NULL,
+  `account_number` bigint NOT NULL,
   `customer_id` int NOT NULL,
-  `transaction_dt` date NOT NULL,
+  `transaction_dt` varchar(200) NOT NULL,
   `transaction_summary` varchar(200) NOT NULL,
   `transaction_type` varchar(100) NOT NULL,
   `transaction_amt` int NOT NULL,
@@ -51,26 +78,16 @@ CREATE TABLE `account_transactions` (
   CONSTRAINT `acct_user_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE
 );
 
-
+INSERT INTO `account_transactions` (`transaction_id`, `account_number`, `customer_id`, `transaction_dt`, `transaction_summary`, `transaction_type`,`transaction_amt`,
+`closing_balance`, `create_dt`)  VALUES (UUID(), 186576453434, 1, now(), 'Coffee Shop', 'Withdrawal', 30,34500,now());
 
 INSERT INTO `account_transactions` (`transaction_id`, `account_number`, `customer_id`, `transaction_dt`, `transaction_summary`, `transaction_type`,`transaction_amt`,
-`closing_balance`, `create_dt`)  VALUES (UUID(), 186576453434, 1, CURDATE()-7, 'Coffee Shop', 'Withdrawal', 30,34500,CURDATE()-7);
+`closing_balance`, `create_dt`)  VALUES (UUID(), 186576453434, 1, now()-6, 'Uber', 'Withdrawal', 100,34400,now()-6);
 
 INSERT INTO `account_transactions` (`transaction_id`, `account_number`, `customer_id`, `transaction_dt`, `transaction_summary`, `transaction_type`,`transaction_amt`,
-`closing_balance`, `create_dt`)  VALUES (UUID(), 186576453434, 1, CURDATE()-6, 'Uber', 'Withdrawal', 100,34400,CURDATE()-6);
+`closing_balance`, `create_dt`)  VALUES (UUID(), 186576453434, 1, now()-5, 'Self Deposit', 'Deposit', 500,34900,now()-5);
 
-INSERT INTO `account_transactions` (`transaction_id`, `account_number`, `customer_id`, `transaction_dt`, `transaction_summary`, `transaction_type`,`transaction_amt`,
-`closing_balance`, `create_dt`)  VALUES (UUID(), 186576453434, 1, CURDATE()-5, 'Self Deposit', 'Deposit', 500,34900,CURDATE()-5);
-
-INSERT INTO `account_transactions` (`transaction_id`, `account_number`, `customer_id`, `transaction_dt`, `transaction_summary`, `transaction_type`,`transaction_amt`,
-`closing_balance`, `create_dt`)  VALUES (UUID(), 186576453434, 1, CURDATE()-4, 'Ebay', 'Withdrawal', 600,34300,CURDATE()-4);
-
-INSERT INTO `account_transactions` (`transaction_id`, `account_number`, `customer_id`, `transaction_dt`, `transaction_summary`, `transaction_type`,`transaction_amt`,
-`closing_balance`, `create_dt`)  VALUES (UUID(), 186576453434, 1, CURDATE()-2, 'OnlineTransfer', 'Deposit', 700,35000,CURDATE()-2);
-
-INSERT INTO `account_transactions` (`transaction_id`, `account_number`, `customer_id`, `transaction_dt`, `transaction_summary`, `transaction_type`,`transaction_amt`,
-`closing_balance`, `create_dt`)  VALUES (UUID(), 186576453434, 1, CURDATE()-1, 'Amazon.com', 'Withdrawal', 100,34900,CURDATE()-1);
-
+drop table if exists `loans`;
 
 CREATE TABLE `loans` (
   `loan_number` int NOT NULL AUTO_INCREMENT,
@@ -98,6 +115,8 @@ INSERT INTO `loans` ( `customer_id`, `start_dt`, `loan_type`, `total_loan`, `amo
 INSERT INTO `loans` ( `customer_id`, `start_dt`, `loan_type`, `total_loan`, `amount_paid`, `outstanding_amount`, `create_dt`)
  VALUES ( 1, '2018-02-14', 'Personal', 10000, 3500, 6500, '2018-02-14');
 
+drop table if exists `cards`;
+
 CREATE TABLE `cards` (
   `card_id` int NOT NULL AUTO_INCREMENT,
   `card_number` varchar(100) NOT NULL,
@@ -120,6 +139,9 @@ INSERT INTO `cards` (`card_number`, `customer_id`, `card_type`, `total_limit`, `
 
 INSERT INTO `cards` (`card_number`, `customer_id`, `card_type`, `total_limit`, `amount_used`, `available_amount`, `create_dt`)
  VALUES ('2359XXXX9346', 1, 'Credit', 20000, 4000, 16000, CURDATE());
+
+
+drop table if exists `notice_details`;
 
 CREATE TABLE `notice_details` (
   `notice_id` int NOT NULL AUTO_INCREMENT,
@@ -156,6 +178,8 @@ INSERT INTO `notice_details` ( `notice_summary`, `notice_details`, `notic_beg_dt
 VALUES ('COVID-19 Insurance', 'EazyBank launched an insurance policy which will cover COVID-19 expenses. Please reach out to the branch for more details',
 CURDATE() - INTERVAL 30 DAY, CURDATE() + INTERVAL 30 DAY, CURDATE(), null);
 
+drop table if exists `contact_messages`;
+
 CREATE TABLE `contact_messages` (
   `contact_id` varchar(50) NOT NULL,
   `contact_name` varchar(50) NOT NULL,
@@ -166,6 +190,9 @@ CREATE TABLE `contact_messages` (
   PRIMARY KEY (`contact_id`)
 );
 
+
+drop table if exists `authorities`;
+
 CREATE TABLE `authorities` (
   `id` int NOT NULL AUTO_INCREMENT,
   `customer_id` int NOT NULL,
@@ -174,20 +201,6 @@ CREATE TABLE `authorities` (
   KEY `customer_id` (`customer_id`),
   CONSTRAINT `authorities_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`)
 );
-
-INSERT INTO `authorities` (`customer_id`, `name`)
- VALUES (1, 'VIEWACCOUNT');
-
-INSERT INTO `authorities` (`customer_id`, `name`)
- VALUES (1, 'VIEWCARDS');
-
- INSERT INTO `authorities` (`customer_id`, `name`)
-  VALUES (1, 'VIEWLOANS');
-
- INSERT INTO `authorities` (`customer_id`, `name`)
-   VALUES (1, 'VIEWBALANCE');
-
- DELETE FROM `authorities`;
 
  INSERT INTO `authorities` (`customer_id`, `name`)
   VALUES (1, 'ROLE_USER');

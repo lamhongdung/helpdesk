@@ -11,12 +11,15 @@ import { LoansComponent } from './components/loans/loans.component';
 import { CardsComponent } from './components/cards/cards.component';
 import { AuthActivateRouteGuard } from './routeguards/auth.routeguard';
 import { HomeComponent } from './components/home/home.component';
+import { CategoryListComponent } from './component/category-list/category-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full'},
+  // { path: '', redirectTo: '/login', pathMatch: 'full'},
   { path: 'home', component: HomeComponent},
   { path: 'login', component: LoginComponent},
-  { path: 'contact', component: ContactComponent},
+  // { path: 'contact', component: ContactComponent},
+  { path: 'categories', component: CategoryListComponent},
   { path: 'notices', component: NoticesComponent},
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthActivateRouteGuard]},
   { path: 'logout', component: LogoutComponent},

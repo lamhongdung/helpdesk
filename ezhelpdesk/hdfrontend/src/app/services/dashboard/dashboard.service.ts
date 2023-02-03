@@ -13,6 +13,7 @@ export class DashboardService {
   constructor(private http:HttpClient) { }
 
   getAccountDetails(id: number){
+    // secured APis
     return this.http.get(environment.rooturl + AppConstants.ACCOUNT_API_URL + "?id="+id,{ observe: 'response',withCredentials: true });
   }
 
@@ -29,6 +30,7 @@ export class DashboardService {
   }
 
   getNoticeDetails(){
+    // public APIs
     return this.http.get(environment.rooturl + AppConstants.NOTICES_API_URL,{ observe: 'response' });
   }
 

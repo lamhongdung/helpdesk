@@ -18,24 +18,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+// own AuthenticationProvider
 @Component
 public class UsernamePwdAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
     private CustomerRepository customerRepository;
 
+    // BCryptPasswordEncoder
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // return Authentication object with details of authentication success or not to ProviderManager
+    // if authentication success then Authentication object is stored in the SecurityContext object
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        // email from "Login" form
         String username = authentication.getName();
+        // raw password from "Login form"
         String pwd = authentication.getCredentials().toString();
         List<Customer> customer = customerRepository.findByEmail(username);
+
+
+        // draft
+//        customerRepository.
+
+
         if (customer.size() > 0) {
+            // if raw password is match with password in database
             if (passwordEncoder.matches(pwd, customer.get(0).getPwd())) {
+                // authenticated(login successful)
                 return new UsernamePasswordAuthenticationToken(username, pwd, getGrantedAuthorities(customer.get(0).getAuthorities()));
-            } else {
+            } else { // invalid password
                 throw new BadCredentialsException("Invalid password!");
             }
         }else {

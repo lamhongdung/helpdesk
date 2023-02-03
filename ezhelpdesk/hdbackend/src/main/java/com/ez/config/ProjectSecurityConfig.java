@@ -27,7 +27,8 @@ public class ProjectSecurityConfig {
         CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
         requestHandler.setCsrfRequestAttributeName("_csrf");
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-            .cors().configurationSource(new CorsConfigurationSource() {
+            // allow cors(different domains) globally, no need config @CrossOrigin on all the Controllers any more
+                .cors().configurationSource(new CorsConfigurationSource() {
             @Override
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration config = new CorsConfiguration();
@@ -36,11 +37,15 @@ public class ProjectSecurityConfig {
                 config.setAllowCredentials(true);
                 config.setAllowedHeaders(Collections.singletonList("*"));
                 config.setExposedHeaders(Arrays.asList("Authorization"));
-                config.setMaxAge(3600000000L); // in second
+                config.setMaxAge(3600L); // in second(1 hour)
                 return config;
             }
-                }).and().csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler).ignoringRequestMatchers("/contact","/register")
+                }).and()
+//                .csrf().disable()
+                // ignore csrf protection for public APIs
+                .csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler).ignoringRequestMatchers("/contact","/register", "/categories")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                //
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
                 .addFilterAt(new AuthoritiesLoggingAtFilter(),BasicAuthenticationFilter.class)
@@ -49,16 +54,18 @@ public class ProjectSecurityConfig {
                 .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests()
                         .requestMatchers("/myAccount").hasRole("USER")
+//                        .requestMatchers("/myAccount").permitAll()
                         .requestMatchers("/myBalance").hasAnyRole("USER","ADMIN")
                         .requestMatchers("/myLoans").hasRole("ADMIN")
                         .requestMatchers("/myCards").hasRole("USER")
                         .requestMatchers("/user").authenticated()
-                        .requestMatchers("/notices","/contact","/register").permitAll()
+                        .requestMatchers("/notices","/contact","/register", "/categories").permitAll()
                 .and().formLogin()
                 .and().httpBasic();
         return http.build();
     }
 
+    // PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

@@ -17,6 +17,7 @@ import { CardsComponent } from './components/cards/cards.component';
 import { XhrInterceptor } from './interceptors/app.request.interceptor';
 import { AuthActivateRouteGuard } from './routeguards/auth.routeguard';
 import { HomeComponent } from './components/home/home.component';
+import { CategoryListComponent } from './component/category-list/category-list.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { HomeComponent } from './components/home/home.component';
     BalanceComponent,
     LoansComponent,
     CardsComponent,
-    HomeComponent
+    HomeComponent,
+    CategoryListComponent
   ],
   imports: [
     BrowserModule,
